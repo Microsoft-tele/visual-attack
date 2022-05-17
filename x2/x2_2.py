@@ -40,17 +40,22 @@ p_value_g = []
 p_value_b = []
 
 k = 0
-img_rgb = img.convert('RGB')
-for i in range(0, math.ceil( h // size )):
-    for j in range(0, math.ceil( w // size )):
+img_rgb = img.convert('RGB')  # 转换图像格式为RGB
+
+# 循环切割图片
+for l in range(0, 5): # 取整 512 // 100 向上取整 = 5
+    for k1 in range(0, 5):
         # 选中指定图像块
         l_r = [0 for e1 in range(0, 256)]
         l_g = [0 for e2 in range(0, 256)]
         l_b = [0 for e3 in range(0, 256)]
+
         # 区块内的直方图
-        for row in range(i * size, min(i * size + size,h)):
-            for col in range(j * size, min(j * size + size,w)):
-                data = img_rgb.getpixel((row, col))
+        for x in range(0, 100):
+            for y in range(0, 100):
+                data = img_rgb.getpixel((l * 100 + x, k1 * 100 + y))
+                # print("(" + str(x) + "," + str(y) + ")")
+                print( "k = " + str(k) + " " + "l = " + str(l) + " " + "(" + str(l * 100 + x) + "," + str(k * 100 + y) + ")")
                 r = data[0]
                 g = data[1]
                 b = data[2]
@@ -60,9 +65,12 @@ for i in range(0, math.ceil( h // size )):
 
         # 将l分为h_2i\h_2i+1两个列表
         # print(d_list(l_r, len(l_r)))
+
+        # 三个通道分别做卡方分析
         r_r = chi2_contingency(d_list(l_r, len(l_r)))
         r_g = chi2_contingency(d_list(l_g, len(l_g)))
         r_b = chi2_contingency(d_list(l_b, len(l_b)))
+
         spov_r.append(r_r[0])
         p_value_r.append(r_r[1])
         spov_g.append(r_g[0])
